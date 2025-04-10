@@ -5,7 +5,7 @@ namespace DefaultNamespace
 {
     public class Tray
     {
-        private readonly List<Item> _items;
+        private readonly List<Item> _items = new List<Item>();
         private Vector2Int _currentPos;
         private SpaceManager _spaceManager;
 
@@ -28,6 +28,16 @@ namespace DefaultNamespace
         {
             _items = items;
             _currentPos = currentPos;
+        }
+
+        public Tray(Vector2Int currentPos)
+        {
+            _currentPos = currentPos;
+        }
+
+        public void AddItems(List<Item> items)
+        {
+            _items.AddRange(items);
         }
 
         public void OnDependencyInject(SpaceManager spaceManager)
@@ -60,17 +70,22 @@ namespace DefaultNamespace
             return GetTrayByDirection(_left);
         }
 
-        public bool TrySetIdByColor(ColorType color, int id)
+        public bool TrySetIdByColor(ColorType color, int id, out int amount)
         {
             bool isValid = false;
             int count = _items.Count;
+            amount = 0;
             for (int i = 0; i < count; i++)
             {
-                if (_items[i].Color == color)
-                {
-                    isValid = true;
-                    _items[i].SetId(id);
-                }   
+                if (_items[i].Color != color)
+                    continue;
+
+                if (_items[i].HasId())
+                    return false;
+                
+                amount++;
+                isValid = true;
+                _items[i].SetId(id);
             }
 
             return isValid;

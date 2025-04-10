@@ -12,6 +12,13 @@
             _id = -1;
         }
 
+        public Item(ColorType color, Tray trayHolder)
+        {
+            Color = color;
+            _id = -1;
+            TrayHolder = trayHolder;
+        }
+
         public bool HasId()
         {
             if (_id == -1)
