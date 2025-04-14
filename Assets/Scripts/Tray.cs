@@ -9,10 +9,12 @@ namespace DefaultNamespace
         private Vector2Int _currentPos;
         private SpaceManager _spaceManager;
 
-        private readonly Vector2Int _up = new Vector2Int(0, 1);
-        private readonly Vector2Int _down = new Vector2Int(0, -1);
-        private readonly Vector2Int _left = new Vector2Int(-1, 0);
-        private readonly Vector2Int _right = new Vector2Int(1, 0);
+        private readonly Vector2Int _up = new Vector2Int(-1, 0);
+        private readonly Vector2Int _down = new Vector2Int(1, 0);
+        private readonly Vector2Int _left = new Vector2Int(0, -1);
+        private readonly Vector2Int _right = new Vector2Int(0, 1);
+
+        private int _priority;
 
         public Tray()
         {
@@ -45,9 +47,48 @@ namespace DefaultNamespace
             _spaceManager = spaceManager;
         }
 
+        public Item GetItem(int index)
+        {
+            return _items[index];
+        }
+
         public List<Item> GetItems()
         {
             return _items;
+        }
+
+        public int CountItem()
+        {
+            return _items.Count;
+        }
+
+        public int CountItemById(int id)
+        {
+            int total = 0;
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (!_items[i].HasId() || _items[i].GetId() != id)
+                    continue;
+                total++;
+            }
+
+            return total;
+        }
+
+        public int GetSlotCanSwap(int id)
+        {
+            int total = 0;
+            int count = _items.Count;
+            for (int i = 0; i < count; i++)
+            {
+                if (_items[i].GetId() == id)
+                {
+                    total++;
+                }
+            }
+
+            total += 6 - total;
+            return total;
         }
 
         public Tray GetTrayUp()
@@ -70,11 +111,12 @@ namespace DefaultNamespace
             return GetTrayByDirection(_left);
         }
 
-        public bool TrySetIdByColor(ColorType color, int id, out int amount)
+        public bool TrySetIdByColor(ColorType color, int id, out int amount, out List<Item> items)
         {
             bool isValid = false;
             int count = _items.Count;
             amount = 0;
+            items = new List<Item>();
             for (int i = 0; i < count; i++)
             {
                 if (_items[i].Color != color)
@@ -82,8 +124,9 @@ namespace DefaultNamespace
 
                 if (_items[i].HasId())
                     return false;
-                
+
                 amount++;
+                items.Add(_items[i]);
                 isValid = true;
                 _items[i].SetId(id);
             }
@@ -112,14 +155,61 @@ namespace DefaultNamespace
             _items.Remove(item);
         }
 
+        public void RemoveAt(int index)
+        {
+            _items.RemoveAt(index);
+        }
+
+        public void Insert(int index, Item item)
+        {
+            _items.Insert(index, item);
+        }
+
         public int CountEmptySlot()
         {
             return 6 - _items.Count;
         }
 
+        public Vector2Int GetPos() => _currentPos;
+
         public void SetPos(Vector2Int pos)
         {
             _currentPos = pos;
+        }
+
+        public int CountPositionCanPlace()
+        {
+            int countItemNotSetId = 0;
+            int length = _items.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (_items[i].HasId())
+                    continue;
+                countItemNotSetId++;
+            }
+
+            return 6 - countItemNotSetId;
+        }
+
+        public void ComputePriority()
+        {
+            List<int> listIdIterated = new List<int>();
+            _priority = 0;
+            int length = _items.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (!_items[i].HasId())
+                    continue;
+                if (listIdIterated.IndexOf(_items[i].GetId()) != -1)
+                    continue;
+                _priority += _spaceManager.GetCountItemById(_items[i].GetId());
+                listIdIterated.Add(_items[i].GetId());
+            }
+        }
+
+        public int GetPriority()
+        {
+            return _priority;
         }
     }
 }

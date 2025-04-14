@@ -5,6 +5,8 @@
         private int _id;
         public ColorType Color { get; private set; }
         public Tray TrayHolder { get; set; }
+        
+        public Tray TrayHolderTemp { get; set; }
 
         public Item(ColorType color)
         {
