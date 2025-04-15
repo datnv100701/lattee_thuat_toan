@@ -1,4 +1,6 @@
-﻿namespace DefaultNamespace
+﻿using UnityEngine;
+
+namespace DefaultNamespace
 {
     public class Item
     {
@@ -41,6 +43,13 @@
         public void SetId(int id)
         {
             _id = id;
+        }
+
+        public void Move(int id)
+        {
+            TrayHolder = TrayHolderTemp;
+            TrayHolderTemp.MoveItem(id, this);
+            TrayHolderTemp = null;
         }
     }
 }

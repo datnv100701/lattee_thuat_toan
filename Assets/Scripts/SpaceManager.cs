@@ -15,7 +15,10 @@ public class SpaceManager : MonoBehaviour
 
     private Dictionary<int, int> _dictItemCountOrder = new Dictionary<int, int>();
     private Dictionary<int, HashSet<Tray>> _dictListTrayById = new Dictionary<int, HashSet<Tray>>();
-    private Dictionary<int, List<Item>> _dictItemOrder = new Dictionary<int, List<Item>>();
+    // private Dictionary<int, List<Item>> _dictItemOrder = new Dictionary<int, List<Item>>();
+
+    private List<Item> _itemContainer = new List<Item>();
+    private HashSet<Tray> _traysContainer = new HashSet<Tray>();
 
     private void Awake()
     {
@@ -107,7 +110,7 @@ public class SpaceManager : MonoBehaviour
         tray8.AddItems(items8);
         tray8.OnDependencyInject(this);
         _trays[3, 1] = tray8;
-        
+
         Tray tray9 = new Tray(new Vector2Int(3, 2));
         List<Item> items9 = new List<Item>();
         items9.Add(new Item(ColorType.Blue, tray9));
@@ -188,31 +191,31 @@ public class SpaceManager : MonoBehaviour
         }
     }
 
-    private void AddValueDictItemOrder(int index, List<Item> items)
-    {
-        if (_dictItemOrder.TryGetValue(index, out List<Item> value))
-        {
-            _dictItemOrder[index].AddRange(items);
-        }
-        else
-        {
-            _dictItemOrder[index] = new List<Item>();
-            _dictItemOrder[index].AddRange(items);
-        }
-    }
-
-    private void AddValueDictItemOrder(int index, Item item)
-    {
-        if (_dictItemOrder.TryGetValue(index, out List<Item> value))
-        {
-            _dictItemOrder[index].Add(item);
-        }
-        else
-        {
-            _dictItemOrder[index] = new List<Item>();
-            _dictItemOrder[index].Add(item);
-        }
-    }
+    // private void AddValueDictItemOrder(int index, List<Item> items)
+    // {
+    //     if (_dictItemOrder.TryGetValue(index, out List<Item> value))
+    //     {
+    //         _dictItemOrder[index].AddRange(items);
+    //     }
+    //     else
+    //     {
+    //         _dictItemOrder[index] = new List<Item>();
+    //         _dictItemOrder[index].AddRange(items);
+    //     }
+    // }
+    //
+    // private void AddValueDictItemOrder(int index, Item item)
+    // {
+    //     if (_dictItemOrder.TryGetValue(index, out List<Item> value))
+    //     {
+    //         _dictItemOrder[index].Add(item);
+    //     }
+    //     else
+    //     {
+    //         _dictItemOrder[index] = new List<Item>();
+    //         _dictItemOrder[index].Add(item);
+    //     }
+    // }
 
     private void VisitTrays(Vector2Int pos)
     {
@@ -234,7 +237,7 @@ public class SpaceManager : MonoBehaviour
                     {
                         items[j].SetId(id);
                         AddValueDictItemCountOrder(id, 1);
-                        AddValueDictItemOrder(id, items[j]);
+                        // AddValueDictItemOrder(id, items[j]);
                         AddValueDictTrayOrder(id, tray);
                     }
                 }
@@ -253,8 +256,8 @@ public class SpaceManager : MonoBehaviour
         if (swipe != Swipe.Down && tray.GetTrayUp() != null &&
             tray.GetTrayUp().TrySetIdByColor(color, id, out int amountUp, out List<Item> itemsUp))
         {
-            AddValueDictItemCountOrder( id, amountUp);
-            AddValueDictItemOrder(id, itemsUp);
+            AddValueDictItemCountOrder(id, amountUp);
+            // AddValueDictItemOrder(id, itemsUp);
             AddValueDictTrayOrder(id, tray.GetTrayUp());
             VisitAroundTraysByColor(id, tray.GetTrayUp(), color, Swipe.Up);
             VisitTrays(tray.GetTrayUp().GetPos());
@@ -265,7 +268,7 @@ public class SpaceManager : MonoBehaviour
                 .TrySetIdByColor(color, id, out int amountDown, out List<Item> itemsDown))
         {
             AddValueDictItemCountOrder(id, amountDown);
-            AddValueDictItemOrder(id, itemsDown);
+            // AddValueDictItemOrder(id, itemsDown);
             AddValueDictTrayOrder(id, tray.GetTrayDown());
             VisitAroundTraysByColor(id, tray.GetTrayDown(), color, Swipe.Down);
             VisitTrays(tray.GetTrayDown().GetPos());
@@ -276,7 +279,7 @@ public class SpaceManager : MonoBehaviour
                 .TrySetIdByColor(color, id, out int amountLeft, out List<Item> itemsLeft))
         {
             AddValueDictItemCountOrder(id, amountLeft);
-            AddValueDictItemOrder(id, itemsLeft);
+            // AddValueDictItemOrder(id, itemsLeft);
             AddValueDictTrayOrder(id, tray.GetTrayLeft());
             VisitAroundTraysByColor(id, tray.GetTrayLeft(), color, Swipe.Left);
             VisitTrays(tray.GetTrayLeft().GetPos());
@@ -287,7 +290,7 @@ public class SpaceManager : MonoBehaviour
                 .TrySetIdByColor(color, id, out int amountRight, out List<Item> itemsRight))
         {
             AddValueDictItemCountOrder(id, amountRight);
-            AddValueDictItemOrder(id, itemsRight);
+            // AddValueDictItemOrder(id, itemsRight);
             AddValueDictTrayOrder(id, tray.GetTrayRight());
             VisitAroundTraysByColor(id, tray.GetTrayRight(), color, Swipe.Right);
             VisitTrays(tray.GetTrayRight().GetPos());
@@ -302,19 +305,47 @@ public class SpaceManager : MonoBehaviour
         ComputeAllTraysPriority();
         int numOfSort = ComputeNumOfSort();
 
-        for (int i = 0; i < numOfSort; i++)
+        for (int i = 0; i < 1; i++)
         {
+            ResetTrayContainer();
             int id = GetIdMaxCount();
             List<Tray> trays = GetAndSortListTraysById(id);
             for (int j = 0; j < trays.Count; j++)
             {
                 if (CheckTrayCanCollapseItems(id, trays[j]))
                 {
-                    // MoveItems();
-                    _dictItemCountOrder[id] = Mathf.Max(0, _dictItemCountOrder[id] - 6);
+                    MoveItems(id, trays[j]);
+                    _dictItemCountOrder[id] = _dictItemCountOrder[id] - 6;
+                    if (_dictItemCountOrder[id] <= 0)
+                    {
+                        _dictItemCountOrder.Remove(id);
+                        _dictListTrayById.Remove(id);
+                    }
                     j = trays.Count;
                 }
             }
+        }
+        Print();
+    }
+
+    private void Print()
+    {
+        for (int i = 0; i < _row; i++)
+        {
+            for (int j = 0; j < _column; j++)
+            {
+                if (_trays[i, j] == null)
+                    continue;
+                _trays[i, j].Print();
+            }
+        }
+    }
+
+    private void ResetTrayContainer()
+    {
+        foreach (var tray in _traysContainer)
+        {
+            tray.ResetItemsTemp();
         }
     }
 
@@ -322,8 +353,14 @@ public class SpaceManager : MonoBehaviour
     {
         List<Tray> trays = new List<Tray>();
         trays.AddRange(_dictListTrayById[id]);
-        trays.Sort((a, b) => b.CountEmptySlot().CompareTo(a.CountEmptySlot()));
-        
+        trays.Sort((a, b) =>
+        {
+            int compare = b.CountEmptySlot().CompareTo(a.CountEmptySlot());
+            if (compare != 0)
+                return compare;
+            return a.CountOtherColor().CompareTo(b.CountOtherColor());
+        });
+
         return trays;
     }
 
@@ -332,61 +369,97 @@ public class SpaceManager : MonoBehaviour
         int count = tray.CountItem();
         for (int i = 0; i < count; i++)
         {
-            List<int> listIdChecked = new List<int>();
-            if (_dictItemCountOrder[id] >= 6)
+            if (tray.GetItemAt(i).GetId() == id)
+                continue;
+            if (!TryMoveItems(tray.GetItemAt(id).GetId(), tray))
             {
-                int swapId = tray.GetItem(i).GetId();
-                if (tray.GetItem(i).GetId() == id)
-                    continue;
-                if (listIdChecked.IndexOf(swapId) != -1)
-                    continue;
-                int totalSlotCanSwap = 0;
-                foreach (var t in _dictListTrayById[swapId])
-                {
-                    totalSlotCanSwap += t.GetSlotCanSwap(id);
-                }
-
-                if (tray.CountItemById(swapId) > totalSlotCanSwap)
-                    return false;
-
-                listIdChecked.Add(swapId);
-            }
-            else
-            {
-                
+                return false;
             }
         }
 
         return true;
     }
 
+    private bool TryMoveItems(int id, Tray tray)
+    {
+        HashSet<Tray> trays = _dictListTrayById[id];
+        List<Item> items = tray.GetItemsById(id);
+        foreach (var t in trays)
+        {
+            int count = t.GetSlotCanSwap(id);
+            if (count <= 0)
+                continue;
+            while (count > 0 && items.Count > 0)
+            {
+                t.AddItemTemp(items[0]);
+                items[0].TrayHolderTemp = t;
+                items.RemoveAt(0);
+                count--;
+            }
+
+            if (items.Count <= 0)
+                return true;
+        }
+
+        return items.Count <= 0;
+    }
+
     private void MoveItems(int id, Tray tray)
     {
-        int count = 0;
-        List<Item> items = tray.GetItems();
-        List<Item> itemsCollapse = new List<Item>();
-        for (int i = 0; i < tray.CountItem(); i++)
+        int count = tray.CountItem();
+        Debug.Log(tray.GetPos() + " " + id);
+        for (int i = 0; i < count;)
         {
-            if (items[i].GetId() != id)
+            if (!tray.GetItemAt(i).HasId())
             {
-                HashSet<Tray> trays = _dictListTrayById[items[i].GetId()];
-                foreach (var t in trays)
+                i++;
+                continue;
+            }
+            
+            if (tray.GetItemAt(i).GetId() == id)
+            {
+                i++;
+                continue;
+            }
+
+            tray.GetItemAt(i).Move(id);
+            tray.RemoveAt(i);
+            count--;
+        }
+
+        for (int i = 0; i < _itemContainer.Count; i++)
+        {
+            tray.AddItem(_itemContainer[i]);
+            _itemContainer[i].TrayHolderTemp = null;
+            _itemContainer[i].TrayHolder = tray;
+        }
+
+
+        int countItem = tray.CountItem();
+        if (countItem < 6 && _dictItemCountOrder[id] > count)
+        {
+            HashSet<Tray> trays = _dictListTrayById[id];
+            List<Tray> traySorted = trays.OrderByDescending(x => x.GetPriority()).ToList();
+            for (int i = 0; i < traySorted.Count; i++)
+            {
+                List<Item> items = traySorted[i].GetItemsById(id);
+                for (int j = 0; j < items.Count; j++)
                 {
-                    for (int k = 0; k < t.CountItem(); k++)
+                    tray.AddItem(items[i]);
+                    items[i].TrayHolderTemp = null;
+                    items[i].TrayHolder = tray;
+                    
+                    countItem++;
+                    if (countItem >= 6)
                     {
-                        if (t.GetItem(k).GetId() == id)
-                        {
-                            itemsCollapse.Add(t.GetItem(k));
-                            t.RemoveAt(k);
-                            t.Insert(k, items[i]);
-                            count++;
-                        }
+                        return;
                     }
                 }
-            }
-            else
-            {
-                count++;
+
+                if (6 - countItem >= items.Count)
+                {
+                    _dictListTrayById[id].Remove(traySorted[i]);
+                }
             }
         }
     }
@@ -433,6 +506,11 @@ public class SpaceManager : MonoBehaviour
     public int GetCountItemById(int id)
     {
         return _dictItemCountOrder.GetValueOrDefault(id, 0);
+    }
+
+    public void AddItemContainer(Item item)
+    {
+        _itemContainer.Add(item);
     }
 }
 

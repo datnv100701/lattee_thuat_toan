@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -6,6 +8,7 @@ namespace DefaultNamespace
     public class Tray
     {
         private readonly List<Item> _items = new List<Item>();
+        private readonly List<Item> _itemsTemp = new List<Item>();
         private Vector2Int _currentPos;
         private SpaceManager _spaceManager;
 
@@ -15,6 +18,8 @@ namespace DefaultNamespace
         private readonly Vector2Int _right = new Vector2Int(0, 1);
 
         private int _priority;
+
+        private bool _isCompleted = false;
 
         public Tray()
         {
@@ -47,7 +52,7 @@ namespace DefaultNamespace
             _spaceManager = spaceManager;
         }
 
-        public Item GetItem(int index)
+        public Item GetItemAt(int index)
         {
             return _items[index];
         }
@@ -55,6 +60,20 @@ namespace DefaultNamespace
         public List<Item> GetItems()
         {
             return _items;
+        }
+
+        public List<Item> GetItemsById(int id)
+        {
+            List<Item> items = new List<Item>();
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (_items[i].HasId() && _items[i].GetId() == id)
+                {
+                    items.Add(_items[i]);
+                }
+            }
+
+            return items;
         }
 
         public int CountItem()
@@ -87,7 +106,7 @@ namespace DefaultNamespace
                 }
             }
 
-            total += 6 - total;
+            total += 6 - total - _itemsTemp.Count;
             return total;
         }
 
@@ -167,7 +186,29 @@ namespace DefaultNamespace
 
         public int CountEmptySlot()
         {
-            return 6 - _items.Count;
+            int count = 6 - _items.Count;
+
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (_items[i].HasId())
+                    count++;
+            }
+
+            return count;
+        }
+
+        public int CountOtherColor()
+        {
+            List<ColorType> color = new List<ColorType>();
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (color.IndexOf(_items[i].Color) == -1)
+                {
+                    color.Add(_items[i].Color);
+                }
+            }
+
+            return color.Count;
         }
 
         public Vector2Int GetPos() => _currentPos;
@@ -210,6 +251,48 @@ namespace DefaultNamespace
         public int GetPriority()
         {
             return _priority;
+        }
+
+        public void AddItemTemp(Item item)
+        {
+            _itemsTemp.Add(item);
+        }
+
+        public void ResetItemsTemp()
+        {
+            _itemsTemp.Clear();
+        }
+
+        public void MoveItem(int id, Item item)
+        {
+            if (_items.Count >= 6)
+            {
+                Item i = _items.First(x => x.HasId() && x.GetId() == id);
+                _items.Remove(i);
+                _spaceManager.AddItemContainer(i);
+            }
+            _items.Add(item);
+        }
+
+        public bool IsCompleted()
+        {
+            return _isCompleted;
+        }
+
+        public void SetComplete()
+        {
+            _isCompleted = true;
+        }
+
+        public void Print()
+        {
+            StringBuilder str = new StringBuilder();
+            for (int i = 0; i < _items.Count; i++)
+            {
+                str.Append(_items[i].Color + " ");
+            }
+            
+            Debug.Log(str);
         }
     }
 }
