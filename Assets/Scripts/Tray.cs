@@ -76,6 +76,17 @@ namespace DefaultNamespace
             return items;
         }
 
+        public Item FirstItemById(int id)
+        {
+            foreach (Item item in _items)
+            {
+                if (item.HasId() && item.GetId() == id)
+                    return item;
+            }
+
+            return null;
+        }
+
         public int CountItem()
         {
             return _items.Count;
@@ -157,6 +168,9 @@ namespace DefaultNamespace
         {
             if (!_spaceManager.IsValidPos(_currentPos + dir))
                 return null;
+            // Debug.Log((_currentPos + dir) + " " + (_spaceManager.GetTray(_currentPos + dir) == null));
+            Vector2Int pos = _currentPos + dir;
+            Tray tray = _spaceManager.GetTray(_currentPos + dir);
             return _spaceManager.GetTray(_currentPos + dir);
         }
 
@@ -243,7 +257,7 @@ namespace DefaultNamespace
                     continue;
                 if (listIdIterated.IndexOf(_items[i].GetId()) != -1)
                     continue;
-                _priority += _spaceManager.GetCountItemById(_items[i].GetId());
+                _priority += _spaceManager.GetCountItemById(_items[i].GetId()) / 6;
                 listIdIterated.Add(_items[i].GetId());
             }
         }
@@ -292,7 +306,7 @@ namespace DefaultNamespace
                 str.Append(_items[i].Color + " ");
             }
             
-            Debug.Log(str);
+            Debug.Log(GetPos() + " " + str + " " + _priority);
         }
     }
 }

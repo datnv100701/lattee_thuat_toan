@@ -14,7 +14,7 @@ public class SpaceManager : MonoBehaviour
     private Tray[,] _trays;
 
     private Dictionary<int, int> _dictItemCountOrder = new Dictionary<int, int>();
-    private Dictionary<int, HashSet<Tray>> _dictListTrayById = new Dictionary<int, HashSet<Tray>>();
+    private Dictionary<int, HashSet<Tray>> _dictLinkedTrayById = new Dictionary<int, HashSet<Tray>>();
     // private Dictionary<int, List<Item>> _dictItemOrder = new Dictionary<int, List<Item>>();
 
     private List<Item> _itemContainer = new List<Item>();
@@ -25,124 +25,144 @@ public class SpaceManager : MonoBehaviour
         _trays = new Tray[_row, _column];
         //do 1, xanh 2, tim 3, vang 4, blue 5;
 
+        // Tray tray1 = new Tray(new Vector2Int(0, 1));
+        // List<Item> items1 = new List<Item>();
+        // items1.Add(new Item(ColorType.Red, tray1));
+        // items1.Add(new Item(ColorType.Red, tray1));
+        // items1.Add(new Item(ColorType.Green, tray1));
+        // items1.Add(new Item(ColorType.Purple, tray1));
+        // tray1.AddItems(items1);
+        // tray1.OnDependencyInject(this);
+        // _trays[0, 1] = tray1;
+        //
+        // Tray tray2 = new Tray(new Vector2Int(1, 0));
+        // List<Item> items2 = new List<Item>();
+        // items2.Add(new Item(ColorType.Green, tray2));
+        // items2.Add(new Item(ColorType.Purple, tray2));
+        // items2.Add(new Item(ColorType.Yellow, tray2));
+        // items2.Add(new Item(ColorType.Yellow, tray2));
+        // tray2.AddItems(items2);
+        // tray2.OnDependencyInject(this);
+        // _trays[1, 0] = tray2;
+        //
+        // Tray tray3 = new Tray(new Vector2Int(1, 2));
+        // List<Item> items3 = new List<Item>();
+        // items3.Add(new Item(ColorType.Green, tray3));
+        // items3.Add(new Item(ColorType.Green, tray3));
+        // items3.Add(new Item(ColorType.Green, tray3));
+        // tray3.AddItems(items3);
+        // tray3.OnDependencyInject(this);
+        // _trays[1, 2] = tray3;
+        //
+        // Tray tray4 = new Tray(new Vector2Int(2, 0));
+        // List<Item> items4 = new List<Item>();
+        // items4.Add(new Item(ColorType.Blue, tray4));
+        // items4.Add(new Item(ColorType.Blue, tray4));
+        // items4.Add(new Item(ColorType.Blue, tray4));
+        // items4.Add(new Item(ColorType.Purple, tray4));
+        // items4.Add(new Item(ColorType.Purple, tray4));
+        // items4.Add(new Item(ColorType.Purple, tray4));
+        // tray4.AddItems(items4);
+        // tray4.OnDependencyInject(this);
+        // _trays[2, 0] = tray4;
+        //
+        // Tray tray5 = new Tray(new Vector2Int(2, 1));
+        // List<Item> items5 = new List<Item>();
+        // items5.Add(new Item(ColorType.Green, tray5));
+        // items5.Add(new Item(ColorType.Green, tray5));
+        // items5.Add(new Item(ColorType.Green, tray5));
+        // items5.Add(new Item(ColorType.Purple, tray5));
+        // items5.Add(new Item(ColorType.Purple, tray5));
+        // items5.Add(new Item(ColorType.Purple, tray5));
+        // tray5.AddItems(items5);
+        // tray5.OnDependencyInject(this);
+        // _trays[2, 1] = tray5;
+        //
+        // Tray tray6 = new Tray(new Vector2Int(2, 2));
+        // List<Item> items6 = new List<Item>();
+        // items6.Add(new Item(ColorType.Red, tray6));
+        // items6.Add(new Item(ColorType.Red, tray6));
+        // items6.Add(new Item(ColorType.Red, tray6));
+        // items6.Add(new Item(ColorType.Purple, tray6));
+        // items6.Add(new Item(ColorType.Purple, tray6));
+        // items6.Add(new Item(ColorType.Purple, tray6));
+        // tray6.AddItems(items6);
+        // tray6.OnDependencyInject(this);
+        // _trays[2, 2] = tray6;
+        //
+        // Tray tray7 = new Tray(new Vector2Int(3, 0));
+        // List<Item> items7 = new List<Item>();
+        // items7.Add(new Item(ColorType.Red, tray7));
+        // items7.Add(new Item(ColorType.Red, tray7));
+        // items7.Add(new Item(ColorType.Red, tray7));
+        // tray7.AddItems(items7);
+        // tray7.OnDependencyInject(this);
+        // _trays[3, 0] = tray7;
+        //
+        // Tray tray8 = new Tray(new Vector2Int(3, 1));
+        // List<Item> items8 = new List<Item>();
+        // items8.Add(new Item(ColorType.Yellow, tray8));
+        // items8.Add(new Item(ColorType.Yellow, tray8));
+        // items8.Add(new Item(ColorType.Yellow, tray8));
+        // items8.Add(new Item(ColorType.Green, tray8));
+        // items8.Add(new Item(ColorType.Green, tray8));
+        // items8.Add(new Item(ColorType.Green, tray8));
+        // tray8.AddItems(items8);
+        // tray8.OnDependencyInject(this);
+        // _trays[3, 1] = tray8;
+        //
+        // Tray tray9 = new Tray(new Vector2Int(3, 2));
+        // List<Item> items9 = new List<Item>();
+        // items9.Add(new Item(ColorType.Blue, tray9));
+        // items9.Add(new Item(ColorType.Blue, tray9));
+        // items9.Add(new Item(ColorType.Blue, tray9));
+        // items9.Add(new Item(ColorType.Yellow, tray9));
+        // items9.Add(new Item(ColorType.Yellow, tray9));
+        // items9.Add(new Item(ColorType.Yellow, tray9));
+        // tray9.AddItems(items9);
+        // tray9.OnDependencyInject(this);
+        // _trays[3, 2] = tray9;
+        //
+        // Tray tray10 = new Tray(new Vector2Int(4, 1));
+        // List<Item> items10 = new List<Item>();
+        // items10.Add(new Item(ColorType.Purple, tray10));
+        // items10.Add(new Item(ColorType.Purple, tray10));
+        // items10.Add(new Item(ColorType.Purple, tray10));
+        // items10.Add(new Item(ColorType.Green, tray10));
+        // items10.Add(new Item(ColorType.Green, tray10));
+        // items10.Add(new Item(ColorType.Green, tray10));
+        // tray10.AddItems(items10);
+        // tray10.OnDependencyInject(this);
+        // _trays[4, 1] = tray10;
+        //
+        // Tray tray11 = new Tray();
+        // List<Item> items11 = new List<Item>();
+        // items11.Add(new Item(ColorType.Red, tray11));
+        // items11.Add(new Item(ColorType.Yellow, tray11));
+        // items11.Add(new Item(ColorType.Green, tray11));
+        // tray11.AddItems(items11);
+        //
+        // PlaceTray(tray11, new Vector2Int(1, 1));
+
+
         Tray tray1 = new Tray(new Vector2Int(0, 1));
         List<Item> items1 = new List<Item>();
         items1.Add(new Item(ColorType.Red, tray1));
         items1.Add(new Item(ColorType.Red, tray1));
-        items1.Add(new Item(ColorType.Green, tray1));
-        items1.Add(new Item(ColorType.Purple, tray1));
+        items1.Add(new Item(ColorType.Yellow, tray1));
         tray1.AddItems(items1);
         tray1.OnDependencyInject(this);
         _trays[0, 1] = tray1;
-
-        Tray tray2 = new Tray(new Vector2Int(1, 0));
+        
+        Tray tray2 = new Tray();
         List<Item> items2 = new List<Item>();
-        items2.Add(new Item(ColorType.Green, tray2));
-        items2.Add(new Item(ColorType.Purple, tray2));
-        items2.Add(new Item(ColorType.Yellow, tray2));
+        items2.Add(new Item(ColorType.Red, tray2));
+        items2.Add(new Item(ColorType.Red, tray2));
         items2.Add(new Item(ColorType.Yellow, tray2));
         tray2.AddItems(items2);
         tray2.OnDependencyInject(this);
-        _trays[1, 0] = tray2;
-
-        Tray tray3 = new Tray(new Vector2Int(1, 2));
-        List<Item> items3 = new List<Item>();
-        items3.Add(new Item(ColorType.Green, tray3));
-        items3.Add(new Item(ColorType.Green, tray3));
-        items3.Add(new Item(ColorType.Green, tray3));
-        tray3.AddItems(items3);
-        tray3.OnDependencyInject(this);
-        _trays[1, 2] = tray3;
-
-        Tray tray4 = new Tray(new Vector2Int(2, 0));
-        List<Item> items4 = new List<Item>();
-        items4.Add(new Item(ColorType.Blue, tray4));
-        items4.Add(new Item(ColorType.Blue, tray4));
-        items4.Add(new Item(ColorType.Blue, tray4));
-        items4.Add(new Item(ColorType.Purple, tray4));
-        items4.Add(new Item(ColorType.Purple, tray4));
-        items4.Add(new Item(ColorType.Purple, tray4));
-        tray4.AddItems(items4);
-        tray4.OnDependencyInject(this);
-        _trays[2, 0] = tray4;
-
-        Tray tray5 = new Tray(new Vector2Int(2, 1));
-        List<Item> items5 = new List<Item>();
-        items5.Add(new Item(ColorType.Green, tray5));
-        items5.Add(new Item(ColorType.Green, tray5));
-        items5.Add(new Item(ColorType.Green, tray5));
-        items5.Add(new Item(ColorType.Purple, tray5));
-        items5.Add(new Item(ColorType.Purple, tray5));
-        items5.Add(new Item(ColorType.Purple, tray5));
-        tray5.AddItems(items5);
-        tray5.OnDependencyInject(this);
-        _trays[2, 1] = tray5;
-
-        Tray tray6 = new Tray(new Vector2Int(2, 2));
-        List<Item> items6 = new List<Item>();
-        items6.Add(new Item(ColorType.Red, tray6));
-        items6.Add(new Item(ColorType.Red, tray6));
-        items6.Add(new Item(ColorType.Red, tray6));
-        items6.Add(new Item(ColorType.Purple, tray6));
-        items6.Add(new Item(ColorType.Purple, tray6));
-        items6.Add(new Item(ColorType.Purple, tray6));
-        tray6.AddItems(items6);
-        tray6.OnDependencyInject(this);
-        _trays[2, 2] = tray6;
-
-        Tray tray7 = new Tray(new Vector2Int(3, 0));
-        List<Item> items7 = new List<Item>();
-        items7.Add(new Item(ColorType.Red, tray7));
-        items7.Add(new Item(ColorType.Red, tray7));
-        items7.Add(new Item(ColorType.Red, tray7));
-        tray7.AddItems(items7);
-        tray7.OnDependencyInject(this);
-        _trays[3, 0] = tray7;
-
-        Tray tray8 = new Tray(new Vector2Int(3, 1));
-        List<Item> items8 = new List<Item>();
-        items8.Add(new Item(ColorType.Yellow, tray8));
-        items8.Add(new Item(ColorType.Yellow, tray8));
-        items8.Add(new Item(ColorType.Yellow, tray8));
-        items8.Add(new Item(ColorType.Green, tray8));
-        items8.Add(new Item(ColorType.Green, tray8));
-        items8.Add(new Item(ColorType.Green, tray8));
-        tray8.AddItems(items8);
-        tray8.OnDependencyInject(this);
-        _trays[3, 1] = tray8;
-
-        Tray tray9 = new Tray(new Vector2Int(3, 2));
-        List<Item> items9 = new List<Item>();
-        items9.Add(new Item(ColorType.Blue, tray9));
-        items9.Add(new Item(ColorType.Blue, tray9));
-        items9.Add(new Item(ColorType.Blue, tray9));
-        items9.Add(new Item(ColorType.Yellow, tray9));
-        items9.Add(new Item(ColorType.Yellow, tray9));
-        items9.Add(new Item(ColorType.Yellow, tray9));
-        tray9.AddItems(items9);
-        tray9.OnDependencyInject(this);
-        _trays[3, 2] = tray9;
-
-        Tray tray10 = new Tray(new Vector2Int(4, 1));
-        List<Item> items10 = new List<Item>();
-        items10.Add(new Item(ColorType.Purple, tray10));
-        items10.Add(new Item(ColorType.Purple, tray10));
-        items10.Add(new Item(ColorType.Purple, tray10));
-        items10.Add(new Item(ColorType.Green, tray10));
-        items10.Add(new Item(ColorType.Green, tray10));
-        items10.Add(new Item(ColorType.Green, tray10));
-        tray10.AddItems(items10);
-        tray10.OnDependencyInject(this);
-        _trays[4, 1] = tray10;
-
-        Tray tray11 = new Tray();
-        List<Item> items11 = new List<Item>();
-        items11.Add(new Item(ColorType.Red, tray11));
-        items11.Add(new Item(ColorType.Yellow, tray11));
-        items11.Add(new Item(ColorType.Green, tray11));
-        tray11.AddItems(items11);
-
-        PlaceTray(tray11, new Vector2Int(1, 1));
+        
+        PlaceTray(tray2, new Vector2Int(0, 2));
     }
 
     public Tray GetTray(Vector2Int pos)
@@ -157,13 +177,12 @@ public class SpaceManager : MonoBehaviour
         _trays[pos.x, pos.y] = tray;
 
         VisitTrays(pos);
-        Sort();
-
         // for (int i = 1; i <= _index; i++)
         // {
         //     if (_dictItemCountOrder.TryGetValue(i, out int value))
         //         Debug.Log(i + " " + value);
         // }
+        Sort();
     }
 
     private void AddValueDictItemCountOrder(int index, int count)
@@ -180,14 +199,14 @@ public class SpaceManager : MonoBehaviour
 
     private void AddValueDictTrayOrder(int index, Tray tray)
     {
-        if (_dictListTrayById.TryGetValue(index, out HashSet<Tray> value))
+        if (_dictLinkedTrayById.TryGetValue(index, out HashSet<Tray> value))
         {
-            _dictListTrayById[index].Add(tray);
+            _dictLinkedTrayById[index].Add(tray);
         }
         else
         {
-            _dictListTrayById[index] = new HashSet<Tray>();
-            _dictListTrayById[index].Add(tray);
+            _dictLinkedTrayById[index] = new HashSet<Tray>();
+            _dictLinkedTrayById[index].Add(tray);
         }
     }
 
@@ -220,6 +239,8 @@ public class SpaceManager : MonoBehaviour
     private void VisitTrays(Vector2Int pos)
     {
         Tray tray = GetTray(pos);
+        // if (tray == null)
+        //     return;
         List<Item> items = tray.GetItems();
         int count = items.Count;
         for (int i = 0; i < count; i++)
@@ -304,27 +325,34 @@ public class SpaceManager : MonoBehaviour
     {
         ComputeAllTraysPriority();
         int numOfSort = ComputeNumOfSort();
+        // Debug.Log("Num of sort " + numOfSort);
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < numOfSort; i++)
         {
-            ResetTrayContainer();
+            // ResetTrayContainer();
             int id = GetIdMaxCount();
+            // Debug.Log(id + " " + _dictItemCountOrder[id] + " " + _dictLinkedTrayById[id].Count + " " + _dictLinkedTrayById[id].First().FirstItemById(id).Color);
             List<Tray> trays = GetAndSortListTraysById(id);
             for (int j = 0; j < trays.Count; j++)
             {
-                if (CheckTrayCanCollapseItems(id, trays[j]))
+                if (CheckTrayCanCollapseItems(id, trays[j], out int amountCollapseItems))
                 {
-                    MoveItems(id, trays[j]);
-                    _dictItemCountOrder[id] = _dictItemCountOrder[id] - 6;
+                    // Debug.Log(id + " " + trays[j].GetPos());
+                    if (_dictLinkedTrayById[id].Count > 1)
+                        MoveItems(id, trays[j]);
+                    _dictItemCountOrder[id] = _dictItemCountOrder[id] - amountCollapseItems;
+                    _dictLinkedTrayById[id].Remove(trays[j]);
                     if (_dictItemCountOrder[id] <= 0)
                     {
                         _dictItemCountOrder.Remove(id);
-                        _dictListTrayById.Remove(id);
+                        _dictLinkedTrayById.Remove(id);
                     }
+
                     j = trays.Count;
                 }
             }
         }
+
         Print();
     }
 
@@ -339,12 +367,18 @@ public class SpaceManager : MonoBehaviour
                 _trays[i, j].Print();
             }
         }
+
+        foreach (var _dict in _dictLinkedTrayById)
+        {
+            Debug.Log(_dict.Key + " " + _dict.Value.Count + " " + _dictItemCountOrder[_dict.Key]);
+        }
     }
 
     private void ResetTrayContainer()
     {
         foreach (var tray in _traysContainer)
         {
+            Debug.Log("ResetTrayContainer");
             tray.ResetItemsTemp();
         }
     }
@@ -352,7 +386,7 @@ public class SpaceManager : MonoBehaviour
     private List<Tray> GetAndSortListTraysById(int id)
     {
         List<Tray> trays = new List<Tray>();
-        trays.AddRange(_dictListTrayById[id]);
+        trays.AddRange(_dictLinkedTrayById[id]);
         trays.Sort((a, b) =>
         {
             int compare = b.CountEmptySlot().CompareTo(a.CountEmptySlot());
@@ -364,14 +398,25 @@ public class SpaceManager : MonoBehaviour
         return trays;
     }
 
-    private bool CheckTrayCanCollapseItems(int id, Tray tray)
+    private bool CheckTrayCanCollapseItems(int id, Tray tray, out int amountCollapseItems)
     {
         int count = tray.CountItem();
+        amountCollapseItems = 6;
+
+        if (_dictLinkedTrayById[id].Count == 1)
+            return true;
+
         for (int i = 0; i < count; i++)
         {
             if (tray.GetItemAt(i).GetId() == id)
                 continue;
-            if (!TryMoveItems(tray.GetItemAt(id).GetId(), tray))
+            if (!tray.GetItemAt(i).HasId())
+            {
+                amountCollapseItems--;
+                continue;
+            }
+
+            if (!TryMoveItems(tray.GetItemAt(i).GetId(), tray))
             {
                 return false;
             }
@@ -382,10 +427,15 @@ public class SpaceManager : MonoBehaviour
 
     private bool TryMoveItems(int id, Tray tray)
     {
-        HashSet<Tray> trays = _dictListTrayById[id];
+        if (!_dictLinkedTrayById.ContainsKey(id))
+            return false;
+        HashSet<Tray> trays = _dictLinkedTrayById[id];
         List<Item> items = tray.GetItemsById(id);
+
         foreach (var t in trays)
         {
+            if (t == tray)
+                continue;
             int count = t.GetSlotCanSwap(id);
             if (count <= 0)
                 continue;
@@ -406,59 +456,98 @@ public class SpaceManager : MonoBehaviour
 
     private void MoveItems(int id, Tray tray)
     {
-        int count = tray.CountItem();
-        Debug.Log(tray.GetPos() + " " + id);
-        for (int i = 0; i < count;)
+        MoveItemsDiffId(id, tray, out int amountRemain);
+        MoveItemsFromContainerTo(tray);
+        MoveItemsFromOthers(id, tray, amountRemain);
+    }
+
+    private void MoveItemsDiffId(int id, Tray tray, out int amountRemain)
+    {
+        amountRemain = tray.CountItem();
+        HashSet<int> diffIds = new HashSet<int>();
+        for (int i = 0; i < amountRemain;)
         {
             if (!tray.GetItemAt(i).HasId())
             {
                 i++;
                 continue;
             }
-            
+
             if (tray.GetItemAt(i).GetId() == id)
             {
                 i++;
                 continue;
             }
 
-            tray.GetItemAt(i).Move(id);
+            Item item = tray.GetItemAt(i);
+            diffIds.Add(item.GetId());
+            item.Move(id);
             tray.RemoveAt(i);
-            count--;
+            amountRemain--;
         }
 
-        for (int i = 0; i < _itemContainer.Count; i++)
+        foreach (int diffId in diffIds)
         {
-            tray.AddItem(_itemContainer[i]);
-            _itemContainer[i].TrayHolderTemp = null;
-            _itemContainer[i].TrayHolder = tray;
+            // Debug.Log(_dictLinkedTrayById[diffId].Count);
+            _dictLinkedTrayById[diffId].Remove(tray);
         }
+    }
 
+    private void MoveItemsFromContainerTo(Tray tray)
+    {
+        foreach (Item item in _itemContainer)
+        {
+            tray.AddItem(item);
+            item.TrayHolderTemp = null;
+            item.TrayHolder = tray;
+        }
+    }
 
+    private void MoveItemsFromOthers(int id, Tray tray, int amountNeed)
+    {
         int countItem = tray.CountItem();
-        if (countItem < 6 && _dictItemCountOrder[id] > count)
+        if (countItem < 6/* && _dictItemCountOrder[id] > amountNeed*/)
         {
-            HashSet<Tray> trays = _dictListTrayById[id];
-            List<Tray> traySorted = trays.OrderByDescending(x => x.GetPriority()).ToList();
-            for (int i = 0; i < traySorted.Count; i++)
+            HashSet<Tray> trays = _dictLinkedTrayById[id];
+            // List<Tray> traySorted = trays.OrderByDescending(x => x.GetPriority()).ToList();
+            List<Tray> traySorted = new List<Tray>();
+            traySorted.AddRange(trays.ToList());
+            traySorted.Sort((a, b) =>
             {
+                int compare = b.GetPriority().CompareTo(a.GetPriority());
+                if (compare != 0)
+                    return compare;
+                // return b.CountOtherColor().CompareTo(a.CountOtherColor());
+                return b.CountPositionCanPlace().CompareTo(a.CountPositionCanPlace());
+            });
+
+            int length = traySorted.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (traySorted[i] == tray)
+                    continue;
+                
                 List<Item> items = traySorted[i].GetItemsById(id);
                 for (int j = 0; j < items.Count; j++)
                 {
-                    tray.AddItem(items[i]);
-                    items[i].TrayHolderTemp = null;
-                    items[i].TrayHolder = tray;
-                    
+                    items[j].RemoveTray();
+                    tray.AddItem(items[j]);
+                    items[j].TrayHolder = tray;
+
                     countItem++;
                     if (countItem >= 6)
                     {
+                        if (traySorted[i].CountItemById(id) == 0)
+                        {
+                            _dictLinkedTrayById[id].Remove(traySorted[i]);
+                        }
                         return;
                     }
                 }
 
-                if (6 - countItem >= items.Count)
+                if (traySorted[i].CountItemById(id) == 0)
                 {
-                    _dictListTrayById[id].Remove(traySorted[i]);
+                    _dictLinkedTrayById[id].Remove(traySorted[i]);
                 }
             }
         }
@@ -482,7 +571,7 @@ public class SpaceManager : MonoBehaviour
         int num = 0;
         foreach (var item in _dictItemCountOrder)
         {
-            num += item.Value / 6 + 1;
+            num += Mathf.CeilToInt(item.Value / 6f);
         }
 
         return num;

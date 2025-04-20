@@ -51,5 +51,12 @@ namespace DefaultNamespace
             TrayHolderTemp.MoveItem(id, this);
             TrayHolderTemp = null;
         }
+
+        public void RemoveTray()
+        {
+            TrayHolder.RemoveItem(this);
+            TrayHolderTemp = null;
+            TrayHolder = null;
+        }
     }
 }
